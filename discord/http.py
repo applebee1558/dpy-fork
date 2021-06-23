@@ -360,7 +360,7 @@ class HTTPClient:
             payload['tts'] = True
 
         if embeds:
-            payload['embeds'] = [embed.to_dict() for embed in embeds]
+            payload['embeds'] = embeds
 
         if nonce:
             payload['nonce'] = nonce
@@ -384,7 +384,7 @@ class HTTPClient:
         if content:
             payload['content'] = content
         if embeds:
-            payload['embeds'] = [embed.to_dict() for embed in embeds]
+            payload['embeds'] = embeds
         if nonce:
             payload['nonce'] = nonce
         if allowed_mentions:
