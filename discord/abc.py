@@ -1015,6 +1015,8 @@ class Messageable(metaclass=abc.ABCMeta):
         content = str(content) if content is not None else None
         if embed is not None:
             embed = embed.to_dict()
+        if embeds is not None:
+            embeds = [embed.to_dict() for embed in embeds]
 
         if allowed_mentions is not None:
             if state.allowed_mentions is not None:
