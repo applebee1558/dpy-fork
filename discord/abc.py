@@ -930,9 +930,9 @@ class Messageable(metaclass=abc.ABCMeta):
     async def _get_channel(self):
         raise NotImplementedError
 
-    async def send(self, content=None, *, tts=False, embed=None, file=None,
+    async def send(self, content=None, *, tts=False, embed=None, embeds=None, file=None,
                                           files=None, delete_after=None, nonce=None,
-                                          allowed_mentions=None, reference=None,
+                                          allowed_mentions=None, reference=None, 
                                           mention_author=None):
         """|coro|
 
@@ -1036,14 +1036,17 @@ class Messageable(metaclass=abc.ABCMeta):
 
         if file is not None and files is not None:
             raise InvalidArgument('cannot pass both file and files parameter to send()')
-
+        if embeds == None and embed != None:
+            embeds = [embed]
+        elif embed==None and embeds==None:
+            embeds = []
         if file is not None:
             if not isinstance(file, File):
                 raise InvalidArgument('file parameter must be File')
 
             try:
                 data = await state.http.send_files(channel.id, files=[file], allowed_mentions=allowed_mentions,
-                                                   content=content, tts=tts, embed=embed, nonce=nonce,
+                                                   content=content, tts=tts, embeds=embeds, nonce=nonce,
                                                    message_reference=reference)
             finally:
                 file.close()
@@ -1056,13 +1059,13 @@ class Messageable(metaclass=abc.ABCMeta):
 
             try:
                 data = await state.http.send_files(channel.id, files=files, content=content, tts=tts,
-                                                   embed=embed, nonce=nonce, allowed_mentions=allowed_mentions,
+                                                   embeds=embeds, nonce=nonce, allowed_mentions=allowed_mentions,
                                                    message_reference=reference)
             finally:
                 for f in files:
                     f.close()
         else:
-            data = await state.http.send_message(channel.id, content, tts=tts, embed=embed,
+            data = await state.http.send_message(channel.id, content, tts=tts, embeds=embeds,
                                                                       nonce=nonce, allowed_mentions=allowed_mentions,
                                                                       message_reference=reference)
 
