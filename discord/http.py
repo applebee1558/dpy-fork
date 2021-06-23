@@ -349,7 +349,7 @@ class HTTPClient:
 
         return self.request(Route('POST', '/users/@me/channels'), json=payload)
 
-    def send_message(self, channel_id, content, *, tts=False, embed=None, nonce=None, allowed_mentions=None, message_reference=None):
+    def send_message(self, channel_id, content, *, tts=False, embeds=None, nonce=None, allowed_mentions=None, message_reference=None):
         r = Route('POST', '/channels/{channel_id}/messages', channel_id=channel_id)
         payload = {}
 
@@ -359,8 +359,8 @@ class HTTPClient:
         if tts:
             payload['tts'] = True
 
-        if embed:
-            payload['embed'] = embed
+        if embeds:
+            payload['embeds'] = [embed.to_dict() for embed in embeds]
 
         if nonce:
             payload['nonce'] = nonce
@@ -376,15 +376,15 @@ class HTTPClient:
     def send_typing(self, channel_id):
         return self.request(Route('POST', '/channels/{channel_id}/typing', channel_id=channel_id))
 
-    def send_files(self, channel_id, *, files, content=None, tts=False, embed=None, nonce=None, allowed_mentions=None, message_reference=None):
+    def send_files(self, channel_id, *, files, content=None, tts=False, embeds=None, nonce=None, allowed_mentions=None, message_reference=None):
         r = Route('POST', '/channels/{channel_id}/messages', channel_id=channel_id)
         form = []
 
         payload = {'tts': tts}
         if content:
             payload['content'] = content
-        if embed:
-            payload['embed'] = embed
+        if embeds:
+            payload['embeds'] = [embed.to_dict() for embed in embeds]
         if nonce:
             payload['nonce'] = nonce
         if allowed_mentions:
